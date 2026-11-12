@@ -316,7 +316,7 @@ function ActionRow({ action }: {action: Action}) {
   return <div className="action-row"><span className={`priority-mark ${action.priority.toLowerCase()}`}/><div className="action-row-main"><b>{action.title}</b><span>{action.assigned_to_name || 'Non assignée'} · {action.due_at ? shortDate(action.due_at) : 'Sans échéance'}</span></div><span className={`status-pill ${action.status.toLowerCase()}`}>{statusLabel(action.status)}</span></div>;
 }
 function statusLabel(status: string) {
-  const labels: Record<string,string> = {OPEN:'À faire', IN_PROGRESS:'En cours', BLOCKED:'Bloquée', DONE:'Terminée', CANCELLED:'Annulée', QUARANTINED:'Quarantaine', REVIEW:'À vérifier', VALIDATED:'Validé', FAILED:'Échec', CANCELLED:'Annulé'};
+  const labels: Record<string,string> = {OPEN:'À faire', IN_PROGRESS:'En cours', BLOCKED:'Bloquée', DONE:'Terminée', CANCELLED:'Annulée', QUARANTINED:'Quarantaine', REVIEW:'À vérifier', VALIDATED:'Validé', FAILED:'Échec'};
   return labels[status] || status;
 }
 
