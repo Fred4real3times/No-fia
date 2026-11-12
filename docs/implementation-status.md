@@ -16,7 +16,7 @@ Mise à jour : 12 novembre 2026.
 | Frontend | MVP de travail | React responsive, login/register, workspace, entreprises, imports, cockpit, actions, analyse, paramètres et audit. |
 | PWA faible réseau | Partiel | Manifest et cache du shell seulement. Aucun cache de données financières ; brouillons offline/synchronisation et conflit pas encore implémentés. |
 | Assistant IA | Non activé | Module P1 verrouillé ; aucune donnée n’est envoyée à un LLM. |
-| CI | Configurée | Backend tests et frontend build prévus sous GitHub Actions. Exécution à confirmer après publication du dépôt. |
+| CI | Validée sur GitHub Actions | Sur `main` : migrations générées puis appliquées sur PostgreSQL 17, `manage.py check`, Ruff et 6 tests backend passés sous Python 3.12 et 3.13 ; type-check TypeScript et build Vite passés sous Node 22. Les migrations générées ne sont pas encore versionnées. |
 | Déploiement | Dev | Docker Compose PostgreSQL/Redis/API/Frontend préparé. Pas d’environnement de production, de sauvegardes testées ou de SLA. |
 
 ## Validation locale observée pendant la génération
@@ -29,10 +29,10 @@ Mise à jour : 12 novembre 2026.
 - Rendu Chromium du mockup : six écrans détectés et captures PNG générées. Il s’agit du mockup HTML, pas d’une session de l’application React connectée.
 - `git diff --check` : passé ; dépôt local propre après commit.
 
-**Contrôles non exécutés :**
-- Installation des dépendances Python et Django/DRF : PyPI inaccessible dans cet environnement (échec DNS).
-- Installation npm, type-check complet et build Vite : npm registry inaccessible.
-- Suite de tests Django/API, migrations et tests PostgreSQL : non exécutés, Django/DRF et pytest-django ne sont pas installés.
-- Recette navigateur de l’application React connectée à l’API et exécution Docker : non exécutées.
+**Contrôles non exécutés localement / restant à faire :**
+- Installation des dépendances Python, Django/DRF et npm sur cet environnement local : registres inaccessibles par DNS. Les installations correspondantes ont en revanche réussi dans la CI GitHub.
+- Recette navigateur de l’application React réellement connectée à l’API, avec parcours multi-utilisateur et fichiers métier représentatifs.
+- Durcissement des migrations : les migrations initiales sont générées à la volée dans le job CI pour valider le scaffold ; elles doivent être relues, commitées et contrôlées sur une base vierge.
+- Revue indépendante de sécurité, tests approfondis d’isolation multi-tenant/RBAC, sauvegarde/restauration et exécution Docker complète.
 
-Ces contrôles non exécutés ne doivent pas être interprétés comme des réussites. La CI doit tourner après publication GitHub, puis les migrations doivent être générées, relues et commitées avant un déploiement non éphémère.
+La CI verte valide le build frontend et le socle de tests actuel ; elle ne constitue ni une recette fonctionnelle exhaustive ni une autorisation de pilote client. Aucun déploiement non éphémère ni chargement de données financières réelles n’est recommandé à ce stade.
