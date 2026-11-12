@@ -1,0 +1,41 @@
+from django.urls import path
+
+from .views import (
+    ActionCommentListCreateView,
+    ActionDetailView,
+    ActionListCreateView,
+    AlertAcknowledgeView,
+    AlertListView,
+    AuditEventListView,
+    BusinessUnitListCreateView,
+    CockpitView,
+    EntityListCreateView,
+    ExportFactsView,
+    ImportBatchCancelView,
+    ImportBatchConfirmView,
+    ImportBatchListCreateView,
+    ImportBatchPreviewView,
+    ImportBatchStageView,
+    WorkspaceListCreateView,
+    WorkspaceMembersView,
+)
+
+urlpatterns = [
+    path("workspaces/", WorkspaceListCreateView.as_view(), name="workspaces"),
+    path("members/", WorkspaceMembersView.as_view(), name="workspace-members"),
+    path("entities/", EntityListCreateView.as_view(), name="entities"),
+    path("business-units/", BusinessUnitListCreateView.as_view(), name="business-units"),
+    path("actions/", ActionListCreateView.as_view(), name="actions"),
+    path("actions/<uuid:action_id>/", ActionDetailView.as_view(), name="action-detail"),
+    path("actions/<uuid:action_id>/comments/", ActionCommentListCreateView.as_view(), name="action-comments"),
+    path("imports/", ImportBatchListCreateView.as_view(), name="imports"),
+    path("imports/<uuid:batch_id>/preview/", ImportBatchPreviewView.as_view(), name="import-preview"),
+    path("imports/<uuid:batch_id>/stage/", ImportBatchStageView.as_view(), name="import-stage"),
+    path("imports/<uuid:batch_id>/confirm/", ImportBatchConfirmView.as_view(), name="import-confirm"),
+    path("imports/<uuid:batch_id>/cancel/", ImportBatchCancelView.as_view(), name="import-cancel"),
+    path("cockpit/", CockpitView.as_view(), name="cockpit"),
+    path("alerts/", AlertListView.as_view(), name="alerts"),
+    path("alerts/<uuid:alert_id>/acknowledge/", AlertAcknowledgeView.as_view(), name="alert-acknowledge"),
+    path("audit/", AuditEventListView.as_view(), name="audit"),
+    path("exports/facts.csv", ExportFactsView.as_view(), name="export-facts"),
+]

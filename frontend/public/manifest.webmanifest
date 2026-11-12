@@ -1,0 +1,11 @@
+{
+  "name": "YFEN — AI Business Control Tower",
+  "short_name": "YFEN",
+  "description": "Cockpit de pilotage exécutif multi-activités.",
+  "lang": "fr-CM",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070c",
+  "theme_color": "#05070c",
+  "icons": []
+}

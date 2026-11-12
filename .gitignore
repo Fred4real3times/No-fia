@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Django / local state
+.env
+.env.*
+!.env.example
+*.sqlite3
+.data/
+media/
+staticfiles/
+
+# Frontend
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets and private customer data
+*.pem
+*.key
+*.p12
+*.pfx
+*.dump
+*.bak
+*.zip
