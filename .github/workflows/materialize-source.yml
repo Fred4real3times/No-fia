@@ -1,0 +1,61 @@
+name: Materialize YFEN source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'yfen-source.tar.gz'
+      - '.github/workflows/materialize-source.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yfen-source-materialization
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Safely extract the prepared source tree
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import PurePosixPath, Path
+          import tarfile
+
+          archive_path = Path('yfen-source.tar.gz')
+          if not archive_path.is_file():
+              raise SystemExit('Expected source archive is missing')
+          with tarfile.open(archive_path, 'r:gz') as archive:
+              members = archive.getmembers()
+              for member in members:
+                  name = PurePosixPath(member.name)
+                  if name.is_absolute() or '..' in name.parts:
+                      raise SystemExit(f'Unsafe archive path: {member.name}')
+                  if not (member.isfile() or member.isdir()):
+                      raise SystemExit(f'Unsupported archive entry: {member.name}')
+              archive.extractall(path='.', filter='data')
+          archive_path.unlink()
+          print(f'Extracted {len(members)} archive entries')
+          PYTHON
+
+      - name: Commit the complete project tree
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No source changes to commit.'
+            exit 0
+          fi
+          git commit -m 'chore: materialize complete YFEN source tree'
+          git push origin HEAD:main

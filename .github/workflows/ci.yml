@@ -1,0 +1,85 @@
+name: YFEN CI
+
+on:
+  push:
+    branches: [main, develop]
+    # Bootstrap commits are validated by the workflow_run trigger below.
+    paths-ignore:
+      - 'yfen-source.tar.gz'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [main, develop]
+  workflow_run:
+    workflows: ['Materialize YFEN source']
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend · Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: yfen_test
+          POSTGRES_USER: yfen
+          POSTGRES_PASSWORD: yfen-test-password
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U yfen -d yfen_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-for-production
+      DJANGO_DEBUG: "true"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DB_ENGINE: postgresql
+      POSTGRES_DB: yfen_test
+      POSTGRES_USER: yfen
+      POSTGRES_PASSWORD: yfen-test-password
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 5432
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install backend dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Generate initial migrations for scaffold validation
+        run: python manage.py makemigrations identity tenancy sources actions alerts audit --noinput
+      - name: Apply migrations
+        run: python manage.py migrate --noinput
+      - name: Django system check
+        run: python manage.py check
+      - name: Ruff
+        run: ruff check .
+      - name: Tests
+        run: pytest -q
+
+  frontend:
+    name: Frontend · Node 22
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.16.0"
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+      - name: Type-check and production build
+        run: npm run build
