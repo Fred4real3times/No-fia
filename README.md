@@ -4,7 +4,7 @@
 
 YFEN réunit des rapports de gestion déjà produits (Excel, CSV et certains PDF textuels), rend la provenance des chiffres visible, met en évidence des exceptions et structure les actions du dirigeant. Il ne remplace pas les ERP, logiciels comptables, caisses ou outils métiers existants.
 
-> **État : socle full-stack de MVP en développement.** Les parcours principaux sont codés, mais les migrations initiales, l’exécution réelle de la CI, la recette navigateur et une revue indépendante de sécurité restent des gates avant pilote client. Ne pas y charger de données financières client en l’état.
+> **État : socle full-stack de MVP en développement.** La CI GitHub passe sur `main` : build/type-check frontend et 6 tests backend sous Python 3.12 et 3.13, avec PostgreSQL. Les migrations initiales restent générées temporairement dans la CI et doivent être relues puis versionnées. La recette navigateur de l’application connectée, la revue indépendante de sécurité et le déploiement restent des gates avant pilote client. Ne pas y charger de données financières client en l’état.
 
 ## Décisions produit non négociables
 
