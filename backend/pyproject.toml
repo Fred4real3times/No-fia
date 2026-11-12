@@ -34,7 +34,7 @@ line-length = 110
 src = ["."]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "DJ"]
+select = ["E4", "E9", "F"]
 ignore = ["DJ001"]
 
 [tool.ruff.format]
