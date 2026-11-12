@@ -19,7 +19,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 
-from apps.actions.models import ActionComment, ActionItem
+from apps.actions.models import ActionItem
 from apps.alerts.models import Alert
 from apps.audit.models import AuditEvent
 from apps.sources.models import ImportBatch, MetricFact, ValidationIssue
